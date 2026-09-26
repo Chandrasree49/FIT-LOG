@@ -24,8 +24,10 @@ type LibraryProps = {
 
 export default function Library({ workouts }: LibraryProps) {
   return (
-    <section className="relative border border-dotted border-[#008cff] bg-[#101216] p-2 sm:p-3">
-      {/* Heading */}
+    <section
+      id="library"
+      className="relative scroll-mt-6 border border-dotted border-[#008cff] bg-[#101216] p-2 sm:p-3"
+    >
       <header className="mb-3">
         <h2 className="text-[12px] font-black uppercase tracking-tight text-white sm:text-sm">
           THE LIBRARY
@@ -36,12 +38,17 @@ export default function Library({ workouts }: LibraryProps) {
         </p>
       </header>
 
-      {/* Workout Grid */}
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-        {workouts.map((workout) => (
-          <WorkoutCard key={workout.id} workout={workout} />
-        ))}
-      </div>
+      {workouts.length === 0 ? (
+        <div className="flex min-h-[180px] items-center justify-center rounded-lg border border-[#292d34] bg-[#15181e]">
+          <p className="text-[10px] text-[#777b83]">No workouts available.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {workouts.map((workout) => (
+            <WorkoutCard key={workout.id} workout={workout} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -52,7 +59,6 @@ function WorkoutCard({ workout }: { workout: Workout }) {
       href={`/Workouts/${workout.id}`}
       className="group block overflow-hidden rounded-[9px] border border-[#292d34] bg-[#15181e] outline-none transition-all duration-200 hover:border-[#555b65] hover:bg-[#181b21] focus-visible:ring-2 focus-visible:ring-[#c8ff00]"
     >
-      {/* Image */}
       <div className="relative h-[120px] w-full overflow-hidden bg-[#20242a] sm:h-[125px]">
         <Image
           src={workout.image}
@@ -64,9 +70,7 @@ function WorkoutCard({ workout }: { workout: Workout }) {
         />
       </div>
 
-      {/* Card body */}
       <div className="px-2.5 pb-2.5 pt-2">
-        {/* Category tags */}
         <div className="mb-1.5 flex min-h-[13px] flex-wrap gap-1">
           {workout.muscleGroups.map((muscle) => (
             <span
@@ -78,20 +82,16 @@ function WorkoutCard({ workout }: { workout: Workout }) {
           ))}
         </div>
 
-        {/* Workout name */}
         <h3 className="truncate text-[9px] font-black uppercase leading-tight text-white">
           {workout.name}
         </h3>
 
-        {/* Equipment */}
         <p className="mt-[3px] truncate text-[7px] text-[#7f838b]">
           {workout.equipment}
         </p>
 
-        {/* Divider */}
         <div className="my-2 border-t border-[#292d34]" />
 
-        {/* Stats */}
         <div className="flex items-center gap-2 text-[6px] text-[#92969f]">
           <Stat icon={<ClockIcon />} value={`${workout.duration} min`} />
 
@@ -112,10 +112,6 @@ function Stat({ icon, value }: { icon: ReactNode; value: string }) {
     </span>
   );
 }
-
-/* =========================
-   ICONS
-========================= */
 
 function ClockIcon() {
   return (

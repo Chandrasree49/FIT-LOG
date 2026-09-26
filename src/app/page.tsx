@@ -23,10 +23,8 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-[#0b0d10] px-2 py-4 sm:px-4">
       <div className="mx-auto w-full max-w-[900px]">
-        {/* Hero Banner */}
         <Banner />
 
-        {/* Workout Library */}
         <div className="mt-4">
           <Library workouts={workouts} />
         </div>
