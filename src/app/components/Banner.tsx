@@ -1,17 +1,16 @@
-import React from "react";
-import Link from "next/link";
-import BannerLogo from "../assets/banner.png";
 import Image from "next/image";
+import bannerImage from "../assets/banner.png";
 
+export default function Banner() {
+  return (
+    <section className="relative overflow-hidden rounded-xl border border-[#292c32] bg-[#15171c]">
+      {/* Blue dotted top border */}
+      <div className="absolute left-0 top-0 z-20 w-full border-t-2 border-dotted border-[#00a8ff]" />
 
-const Banner = () => {
-    return (
-        <section className="relative overflow-hidden rounded-xl border border-[#292c32] bg-[#15171c]">
-
-      <div className="flex min-h-[275px] items-center px-8 py-8 sm:px-10 lg:px-12">
-        {/* Left Content */}
+      <div className="relative flex min-h-[275px] items-center px-7 py-8 sm:px-10 lg:px-12">
+        {/* Content */}
         <div className="relative z-10 max-w-[500px]">
-          <p className="mb-4 text-[10px] font-extrabold tracking-[0.08em] text-[#c8ff00]">
+          <p className="mb-4 text-[10px] font-black uppercase tracking-[0.08em] text-[#c8ff00]">
             WORKOUT LIBRARY
           </p>
 
@@ -32,10 +31,10 @@ const Banner = () => {
           </button>
         </div>
 
-        {/* Right Image */}
-        <div className="absolute right-5 bottom-0 h-[245px] w-[250px] sm:right-8 sm:h-[265px] sm:w-[285px] lg:right-12 lg:w-[300px]">
+        {/* Character image */}
+        <div className="absolute bottom-0 right-2 h-[240px] w-[250px] sm:right-6 sm:h-[260px] sm:w-[280px] lg:right-8 lg:w-[300px]">
           <Image
-            src={BannerLogo}
+            src={bannerImage}
             alt="Workout illustration"
             fill
             priority
@@ -44,7 +43,5 @@ const Banner = () => {
         </div>
       </div>
     </section>
-    );
-};
-
-export default Banner;
+  );
+}
