@@ -1,78 +1,135 @@
 "use client";
 
-import { useState } from "react";
-
 import { usePlan } from "../../components/PlanContext";
 import type { Workout } from "../../components/Library";
+import { toast } from "react-toastify";
 
-export default function WorkoutActions({ workout }: { workout: Workout }) {
-  const { plan, saved, addToPlan, saveForLater, isInPlan, isSaved } = usePlan();
-
-  const [toast, setToast] = useState("");
-
-  function showToast(message: string) {
-    setToast(message);
-
-    window.setTimeout(() => {
-      setToast("");
-    }, 2500);
-  }
+export default function WorkoutActions({
+  workout,
+}: {
+  workout: Workout;
+}) {
+  const { plan, saved, addToPlan, saveForLater } = usePlan();
 
   function handleAddToPlan() {
-    if (isInPlan(workout.id)) {
-      showToast("Already in today's plan");
+    const alreadyInPlan = plan.some(
+      (item) => item.id === workout.id
+    );
+
+    if (alreadyInPlan) {
+      toast.info("Already in today's plan");
       return;
     }
 
     if (plan.length >= 5) {
-      showToast("Today's plan is full");
+      toast.warning("Today's plan is full");
       return;
     }
 
     addToPlan(workout);
-    showToast("Added to today's plan");
+    toast.success("Added to today's plan");
   }
 
   function handleSave() {
-    if (isSaved(workout.id)) {
-      showToast("Already saved");
+    const alreadySaved = saved.some(
+      (item) => item.id === workout.id
+    );
+
+    if (alreadySaved) {
+      toast.info("Already saved");
       return;
     }
 
     saveForLater(workout);
-    showToast("Saved for later");
+    toast.success("Saved for later");
   }
 
   return (
-    <>
-      <div className="mt-6 flex gap-2">
-        {/* ADD TO PLAN */}
-        <button
-          type="button"
-          onClick={handleAddToPlan}
-          className="flex h-[32px] flex-1 items-center justify-center gap-2 rounded-lg bg-[#c8ff00] px-3 text-[9px] font-black uppercase text-black transition hover:bg-[#d8ff45]"
-        >
-          <span className="text-[11px]">+</span>
-          Add to today&apos;s plan
-        </button>
+    <div className="mt-7 flex items-center gap-3">
+      {/* ADD TO PLAN */}
+      <button
+        type="button"
+        onClick={handleAddToPlan}
+        className="inline-flex h-8 items-center justify-center gap-2 rounded-[8px] bg-[#c8ff00] px-4 text-[9px] font-bold text-black transition hover:bg-[#d5ff33] active:scale-[0.98]"
+      >
+        <CalendarIcon />
+        <span>Add to today's plan</span>
+      </button>
 
-        {/* SAVE */}
-        <button
-          type="button"
-          onClick={handleSave}
-          className="flex h-[32px] flex-1 items-center justify-center gap-2 rounded-lg border border-[#30343c] bg-[#101216] px-3 text-[9px] font-bold uppercase text-white transition hover:bg-[#191c21]"
-        >
-          <span className="text-[12px]">♡</span>
-          Save for later
-        </button>
-      </div>
+      {/* SAVE FOR LATER */}
+      <button
+        type="button"
+        onClick={handleSave}
+        className="inline-flex h-8 items-center justify-center gap-2 rounded-[8px] border border-[#30343c] bg-[#101216] px-4 text-[9px] font-medium text-white transition hover:border-[#555b65] hover:bg-[#15181e] active:scale-[0.98]"
+      >
+        <BookmarkIcon />
+        <span>Save for later</span>
+      </button>
+    </div>
+  );
+}
 
-      {/* TOAST */}
-      {toast && (
-        <div className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-[#30343c] bg-[#171a20] px-4 py-2.5 text-[9px] font-bold text-white shadow-xl">
-          {toast}
-        </div>
-      )}
-    </>
+/* =========================================================
+   CALENDAR ICON
+========================================================= */
+
+function CalendarIcon() {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <rect
+        x="3.5"
+        y="5.5"
+        width="17"
+        height="15"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+
+      <path
+        d="M7.5 3.5V7.5M16.5 3.5V7.5M3.5 9.5H20.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/* =========================================================
+   BOOKMARK ICON
+========================================================= */
+
+function BookmarkIcon() {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M6.5 4.5C6.5 3.95 6.95 3.5 7.5 3.5H16.5C17.05 3.5 17.5 3.95 17.5 4.5V20L12 16.5L6.5 20V4.5Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

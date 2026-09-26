@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -22,20 +24,15 @@ type LibraryProps = {
   workouts: Workout[];
 };
 
-export default function Library({
-  workouts,
-}: LibraryProps) {
+export default function Library({ workouts }: LibraryProps) {
   return (
-    <section
-      id="library"
-      className="relative scroll-mt-6 border border-dotted border-[#008cff] bg-[#101216] p-2 sm:p-3"
-    >
+    <section id="library">
       <header className="mb-3">
-        <h2 className="text-[12px] font-black uppercase tracking-tight text-white sm:text-sm">
+        <h2 className="text-[20px] font-black uppercase tracking-tight text-white sm:text-sm">
           THE LIBRARY
         </h2>
 
-        <p className="mt-0.5 text-[8px] leading-relaxed text-[#858990] sm:text-[9px]">
+        <p className="mt-0.5 text-[12px] leading-relaxed text-[#858990] sm:text-[9px]">
           Twelve lifts covering every major muscle group.
         </p>
       </header>
@@ -65,9 +62,18 @@ function WorkoutCard({
 }: {
   workout: Workout;
 }) {
+  function handleClick() {
+    // Save the clicked workout in the browser.
+    sessionStorage.setItem(
+      `fitlog-workout-${workout.id}`,
+      JSON.stringify(workout)
+    );
+  }
+
   return (
     <Link
       href={`/Workouts/${workout.id}`}
+      onClick={handleClick}
       className="group block overflow-hidden rounded-[9px] border border-[#292d34] bg-[#15181e] outline-none transition-all duration-200 hover:border-[#555b65] hover:bg-[#181b21] focus-visible:ring-2 focus-visible:ring-[#c8ff00]"
     >
       <div className="relative h-[120px] w-full overflow-hidden bg-[#20242a] sm:h-[125px]">
@@ -181,7 +187,7 @@ function StarIcon() {
       fill="currentColor"
       aria-hidden="true"
     >
-      <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" />
+      <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" />
     </svg>
   );
 }

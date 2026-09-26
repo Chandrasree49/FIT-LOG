@@ -1,267 +1,236 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import Image from "next/image";
 
-import { usePlan } from "../../components/PlanContext";
 import type { Workout } from "../../components/Library";
+import WorkoutActions from "./WorkoutActions";
 
-const API_URL = "https://api.abcz.workers.dev/api/fitlog";
-
-export default function WorkoutDetailPage() {
+export default function WorkoutPage() {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const {
-    plan,
-    saved,
-    addToPlan,
-    saveForLater,
-  } = usePlan();
-
   useEffect(() => {
-    async function getWorkout() {
-      try {
-        const parts = window.location.pathname.split("/");
-        const id = parts[parts.length - 1];
+    // Get workout ID from:
+    // /Workouts/3
+    const parts = window.location.pathname
+      .split("/")
+      .filter(Boolean);
 
-        const response = await fetch(`${API_URL}/${id}`);
+    const id = parts[parts.length - 1];
 
-        if (!response.ok) {
-          throw new Error("Workout not found");
-        }
-
-        const data: Workout = await response.json();
-
-        setWorkout(data);
-      } catch (error) {
-        console.error("Error loading workout:", error);
-      } finally {
-        setLoading(false);
-      }
+    if (!id) {
+      setLoading(false);
+      return;
     }
 
-    getWorkout();
+    // The Library page stores the selected workout here
+    // before navigating to the detail page.
+    const savedWorkout = sessionStorage.getItem(
+      `fitlog-workout-${id}`
+    );
+
+    if (!savedWorkout) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const workoutData: Workout = JSON.parse(savedWorkout);
+      setWorkout(workoutData);
+    } catch (error) {
+      console.error("Could not read workout:", error);
+    }
+
+    setLoading(false);
   }, []);
+
+  /* =========================================================
+     LOADING
+  ========================================================= */
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#0d0f12] p-10 text-center text-white">
-        Loading workout...
+      <main className="min-h-screen bg-[#0b0d10] px-4 py-8 sm:px-6">
+        <div className="mx-auto w-full max-w-[1100px]">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div className="h-[496px] animate-pulse rounded-[10px] bg-[#15181e]" />
+
+            <div className="animate-pulse">
+              <div className="h-8 w-3/4 rounded bg-[#15181e]" />
+              <div className="mt-4 h-12 rounded bg-[#15181e]" />
+              <div className="mt-5 h-[231px] rounded-[12px] bg-[#15181e]" />
+            </div>
+          </div>
+        </div>
       </main>
     );
   }
+
+  /* =========================================================
+     NOT FOUND
+  ========================================================= */
 
   if (!workout) {
     return (
-      <main className="min-h-screen bg-[#0d0f12] p-10 text-center text-white">
-        <h1 className="text-xl font-bold">
-          Workout not found
-        </h1>
+      <main className="min-h-screen bg-[#0b0d10] px-4 py-8 sm:px-6">
+        <div className="mx-auto w-full max-w-[1100px]">
+          <div className="rounded-[10px] border border-[#292d34] bg-[#15181e] p-6">
+            <h1 className="text-lg font-black uppercase text-white">
+              Workout not found
+            </h1>
 
-        <Link
-          href="/"
-          className="mt-4 inline-block rounded bg-[#c8ff00] px-4 py-2 text-black"
-        >
-          Back to workouts
-        </Link>
+            <p className="mt-2 text-[10px] leading-5 text-[#777b83]">
+              Please go back to the library and select a workout.
+            </p>
+          </div>
+        </div>
       </main>
     );
   }
 
-  // From this point, workout is definitely available
-  const currentWorkout: Workout = workout;
-
-  const alreadyInPlan = plan.some(
-    (item) => item.id === currentWorkout.id
-  );
-
-  const alreadySaved = saved.some(
-    (item) => item.id === currentWorkout.id
-  );
-
-  function handleAddToPlan() {
-    if (alreadyInPlan) {
-      toast.info("Workout is already in your plan.");
-      return;
-    }
-
-    if (plan.length >= 5) {
-      toast.error(
-        "You can only have 5 workouts in your plan."
-      );
-      return;
-    }
-
-    addToPlan(currentWorkout);
-
-    toast.success(
-      "Workout added to your plan!"
-    );
-  }
-
-  function handleSave() {
-    if (alreadySaved) {
-      toast.info("Workout is already saved.");
-      return;
-    }
-
-    saveForLater(currentWorkout);
-
-    toast.success(
-      "Workout saved!"
-    );
-  }
+  /* =========================================================
+     DETAIL PAGE
+  ========================================================= */
 
   return (
-    <main className="min-h-screen bg-[#0d0f12] px-4 py-10">
-      <div className="mx-auto max-w-[840px]">
+    <main className="min-h-screen bg-[#0b0d10] px-4 py-8 sm:px-6">
+      <div className="mx-auto w-full max-w-[1100px]">
 
-        <div className="grid grid-cols-1 overflow-hidden rounded-xl lg:grid-cols-2">
+        <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-[38px]">
 
-          {/* IMAGE */}
+          {/* =================================================
+              LEFT SIDE — IMAGE
+          ================================================= */}
 
-          <div className="relative h-[400px]">
+          <div className="relative h-[496px] overflow-hidden rounded-[10px] bg-[#15181e]">
             <Image
-              src={currentWorkout.image}
-              alt={currentWorkout.name}
+              src={workout.image}
+              alt={workout.name}
               fill
               unoptimized
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
             />
           </div>
 
-          {/* CONTENT */}
+          {/* =================================================
+              RIGHT SIDE
+          ================================================= */}
 
-          <div className="bg-[#111419] p-6">
+          <div className="min-w-0">
 
             {/* TITLE */}
 
-            <h1 className="text-3xl font-black uppercase text-white">
-              {currentWorkout.name}
+            <h1 className="text-[27px] font-black uppercase leading-none tracking-[-0.04em] text-white">
+              {workout.name}
             </h1>
 
             {/* DESCRIPTION */}
 
-            <p className="mt-3 text-sm leading-6 text-gray-400">
-              {currentWorkout.description}
+            <p className="mt-[9px] max-w-[500px] text-[10px] leading-[1.55] text-[#858990]">
+              {workout.description}
             </p>
 
-            {/* MUSCLE GROUPS */}
+            {/* CATEGORY TAGS */}
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              {currentWorkout.muscleGroups.map(
-                (muscle) => (
-                  <span
-                    key={muscle}
-                    className="rounded bg-[#c8ff00] px-3 py-1 text-xs font-bold uppercase text-black"
-                  >
-                    {muscle}
-                  </span>
-                )
-              )}
+            <div className="mt-[11px] flex flex-wrap gap-[7px]">
+              {workout.muscleGroups.map((muscle) => (
+                <span
+                  key={muscle}
+                  className="rounded-full bg-[#c8ff00] px-[10px] py-[4px] text-[7px] font-black uppercase leading-none text-black"
+                >
+                  {muscle}
+                </span>
+              ))}
             </div>
 
-            {/* WORKOUT INFORMATION */}
+            {/* =================================================
+                KEY SPECS
+            ================================================= */}
 
-            <div className="mt-5 rounded-xl border border-[#292d34] bg-[#0d0f12]">
+            <section className="mt-[18px]">
+              <div className="overflow-hidden rounded-[12px] border border-[#292d34] bg-[#15181e]">
 
-              <Info
-                name="Equipment"
-                value={currentWorkout.equipment}
-              />
+                <SpecRow
+                  label="EQUIPMENT"
+                  value={workout.equipment}
+                />
 
-              <Info
-                name="Difficulty"
-                value={currentWorkout.difficulty}
-              />
+                <SpecRow
+                  label="DIFFICULTY"
+                  value={workout.difficulty}
+                />
 
-              <Info
-                name="Sets"
-                value={String(currentWorkout.sets)}
-              />
+                <SpecRow
+                  label="SETS"
+                  value={String(workout.sets)}
+                />
 
-              <Info
-                name="Reps"
-                value={currentWorkout.reps}
-              />
+                <SpecRow
+                  label="REPS"
+                  value={workout.reps}
+                />
 
-              <Info
-                name="Duration"
-                value={`${currentWorkout.duration} min`}
-              />
+                <SpecRow
+                  label="DURATION"
+                  value={`${workout.duration} min`}
+                />
 
-              <Info
-                name="Calories"
-                value={`${currentWorkout.caloriesBurned} kcal`}
-              />
+                <SpecRow
+                  label="CALORIES"
+                  value={`${workout.caloriesBurned} kcal`}
+                />
 
-              <Info
-                name="Rating"
-                value={currentWorkout.rating.toFixed(1)}
-              />
+                <SpecRow
+                  label="RATING"
+                  value={workout.rating.toFixed(1)}
+                  last
+                />
 
-            </div>
+              </div>
+            </section>
 
-            {/* INSTRUCTIONS */}
+            {/* =================================================
+                INSTRUCTIONS
+            ================================================= */}
 
-            <h2 className="mt-6 text-sm font-bold uppercase text-white">
-              Instructions
-            </h2>
+            <section className="mt-[22px]">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.03em] text-white">
+                INSTRUCTIONS
+              </h2>
 
-            <ol className="mt-3 space-y-2">
-              {currentWorkout.instructions.map(
-                (instruction, index) => (
-                  <li
-                    key={index}
-                    className="text-sm leading-6 text-gray-400"
-                  >
-                    <span className="mr-2 text-[#c8ff00]">
-                      {index + 1}.
-                    </span>
+              <ol className="mt-[10px] space-y-[7px]">
+                {workout.instructions.map(
+                  (instruction, index) => (
+                    <li
+                      key={index}
+                      className="flex gap-[9px] text-[9px] leading-[1.45] text-[#a0a4ab]"
+                    >
+                      <span className="shrink-0 text-[8px] text-[#a0a4ab]">
+                        {index + 1}.
+                      </span>
 
-                    {instruction}
-                  </li>
-                )
-              )}
-            </ol>
+                      <span>{instruction}</span>
+                    </li>
+                  )
+                )}
+              </ol>
+            </section>
 
-            {/* BUTTONS */}
+            {/* =================================================
+                BUTTONS
+                DO NOT REBUILD THEM HERE.
+                WorkoutActions handles:
+                - Add to plan
+                - Save for later
+                - duplicate checking
+                - 5 item limit
+                - toast messages
+            ================================================= */}
 
-            <div className="mt-6 flex gap-2">
-
-              <button
-                type="button"
-                onClick={handleAddToPlan}
-                className="flex-1 rounded-lg bg-[#c8ff00] px-3 py-3 text-xs font-bold uppercase text-black transition hover:bg-[#d7ff45]"
-              >
-                {alreadyInPlan
-                  ? "Already in plan"
-                  : "Add to today's plan"}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleSave}
-                className="flex-1 rounded-lg border border-gray-700 px-3 py-3 text-xs font-bold uppercase text-white transition hover:border-gray-400"
-              >
-                {alreadySaved
-                  ? "Saved"
-                  : "Save for later"}
-              </button>
-
-            </div>
-
-            {/* BACK BUTTON */}
-
-            <Link
-              href="/"
-              className="mt-4 block text-center text-xs text-gray-500 hover:text-white"
-            >
-              ← Back to workouts
-            </Link>
+            <WorkoutActions workout={workout} />
 
           </div>
         </div>
@@ -270,24 +239,32 @@ export default function WorkoutDetailPage() {
   );
 }
 
-function Info({
-  name,
+/* =========================================================
+   KEY SPECS ROW
+========================================================= */
+
+function SpecRow({
+  label,
   value,
+  last = false,
 }: {
-  name: string;
+  label: string;
   value: string;
+  last?: boolean;
 }) {
   return (
-    <div className="flex justify-between border-b border-[#292d34] px-4 py-3 last:border-b-0">
-
-      <span className="text-xs uppercase text-gray-500">
-        {name}
+    <div
+      className={`flex h-[33px] items-center justify-between px-[15px] ${
+        !last ? "border-b border-[#292d34]" : ""
+      }`}
+    >
+      <span className="text-[7px] font-medium uppercase tracking-[0.04em] text-[#a0a4ab]">
+        {label}
       </span>
 
-      <span className="text-right text-xs text-white">
+      <span className="text-[8px] font-normal text-[#f1f2f3]">
         {value}
       </span>
-
     </div>
   );
 }

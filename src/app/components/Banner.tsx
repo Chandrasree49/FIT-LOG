@@ -4,8 +4,8 @@ import bannerImage from "../assets/banner.png";
 export default function Banner() {
   return (
     <section className="relative overflow-hidden rounded-xl border border-[#292c32] bg-[#15171c]">
-      <div className="relative flex min-h-[275px] items-center px-7 py-8 sm:px-10 lg:px-12">
 
+      <div className="relative flex min-h-[275px] items-center px-7 py-8 sm:px-10 lg:px-12">
         <div className="relative z-10 max-w-[500px]">
           <p className="mb-4 text-[10px] font-black uppercase tracking-[0.08em] text-[#c8ff00]">
             WORKOUT LIBRARY
@@ -16,17 +16,19 @@ export default function Banner() {
           </h1>
 
           <p className="mt-4 max-w-[450px] text-[12px] leading-[1.6] text-[#9da1aa]">
-            FitLog is a dark, no-nonsense gym companion: pick a lift, lock it
-            into today&apos;s plan, and watch the week&apos;s work add up.
+            FitLog is a dark, no-nonsense gym companion: pick a lift,
+            lock it into today&apos;s plan, and watch the week&apos;s
+            work add up.
           </p>
 
-          <button
-            type="button"
-            className="mt-5 rounded-md bg-[#c8ff00] px-4 py-2.5 text-[10px] font-black uppercase tracking-wide text-black transition hover:bg-[#d8ff45] active:scale-95"
+          <a
+            href="#library"
+            className="mt-5 inline-flex rounded-md bg-[#c8ff00] px-4 py-2.5 text-[10px] font-black uppercase tracking-wide text-black transition hover:bg-[#d8ff45] active:scale-95"
           >
             Browse Workouts
-          </button>
+          </a>
         </div>
+
         <div className="absolute bottom-0 right-2 h-[240px] w-[250px] sm:right-6 sm:h-[260px] sm:w-[280px] lg:right-8 lg:w-[300px]">
           <Image
             src={bannerImage}
