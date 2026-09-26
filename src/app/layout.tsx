@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 
 import { PlanProvider } from "./components/PlanContext";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 export const metadata: Metadata = {
   title: "FitLog",
@@ -35,7 +36,10 @@ export default function RootLayout({
             draggable
             theme="dark"
           />
+          
         </PlanProvider>
+        <Footer/>
+
       </body>
     </html>
   );
