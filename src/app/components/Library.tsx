@@ -22,7 +22,9 @@ type LibraryProps = {
   workouts: Workout[];
 };
 
-export default function Library({ workouts }: LibraryProps) {
+export default function Library({
+  workouts,
+}: LibraryProps) {
   return (
     <section
       id="library"
@@ -40,12 +42,17 @@ export default function Library({ workouts }: LibraryProps) {
 
       {workouts.length === 0 ? (
         <div className="flex min-h-[180px] items-center justify-center rounded-lg border border-[#292d34] bg-[#15181e]">
-          <p className="text-[10px] text-[#777b83]">No workouts available.</p>
+          <p className="text-[10px] text-[#777b83]">
+            No workouts available.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {workouts.map((workout) => (
-            <WorkoutCard key={workout.id} workout={workout} />
+            <WorkoutCard
+              key={workout.id}
+              workout={workout}
+            />
           ))}
         </div>
       )}
@@ -53,7 +60,11 @@ export default function Library({ workouts }: LibraryProps) {
   );
 }
 
-function WorkoutCard({ workout }: { workout: Workout }) {
+function WorkoutCard({
+  workout,
+}: {
+  workout: Workout;
+}) {
   return (
     <Link
       href={`/Workouts/${workout.id}`}
@@ -93,18 +104,33 @@ function WorkoutCard({ workout }: { workout: Workout }) {
         <div className="my-2 border-t border-[#292d34]" />
 
         <div className="flex items-center gap-2 text-[6px] text-[#92969f]">
-          <Stat icon={<ClockIcon />} value={`${workout.duration} min`} />
+          <Stat
+            icon={<ClockIcon />}
+            value={`${workout.duration} min`}
+          />
 
-          <Stat icon={<FlameIcon />} value={`${workout.caloriesBurned} kcal`} />
+          <Stat
+            icon={<FlameIcon />}
+            value={`${workout.caloriesBurned} kcal`}
+          />
 
-          <Stat icon={<StarIcon />} value={workout.rating.toFixed(1)} />
+          <Stat
+            icon={<StarIcon />}
+            value={workout.rating.toFixed(1)}
+          />
         </div>
       </div>
     </Link>
   );
 }
 
-function Stat({ icon, value }: { icon: ReactNode; value: string }) {
+function Stat({
+  icon,
+  value,
+}: {
+  icon: ReactNode;
+  value: string;
+}) {
   return (
     <span className="flex items-center gap-1 whitespace-nowrap">
       {icon}
@@ -141,7 +167,7 @@ function FlameIcon() {
       strokeWidth="2"
       aria-hidden="true"
     >
-      <path d="M12 22c4.4 0 8-3.2 8-7.5 0-3.3-1.9-5.7-4.7-8.2.1 2.1-.7 3.6-1.8 4.6-.2-3.9-2.4-6.8-5.1-8.9.2 3.1-2.4 5.1-2.4 8.6C6 18.5 8.7 22 12 22Z" />
+      <path d="M12 22c4.4 0 8-3.2 8-7.5 0-3.3-1.9-5.7-4.7-8.2.1 2.1-.7 3.6-1.8 4.6-0.2-3.9-2.4-6.8-5.1-8.9.2 3.1-2.4 5.1-2.4 8.6C6 18.5 8.7 22 12 22Z" />
     </svg>
   );
 }

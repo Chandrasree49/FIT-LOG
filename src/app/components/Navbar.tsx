@@ -3,92 +3,73 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-import Logo from "../assets/logo.png";
 import { usePlan } from "./PlanContext";
+import Logo from "../assets/logo.png";
 
 export default function Navbar() {
   const pathname = usePathname();
+
   const { plan, saved } = usePlan();
 
-  const workoutsActive =
-    pathname === "/" || pathname.startsWith("/Workouts");
-
-  const planActive = pathname.startsWith("/my-plan");
+  const workoutsActive = pathname === "/";
+  const planActive = pathname === "/my-plan";
 
   return (
-    <header className="h-[51px] w-full border-b border-white/[0.03] bg-[#0c0d10]">
-      <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-5">
-        <Link
-          href="/"
-          className="flex items-center gap-2.5"
-          aria-label="FitLog Home"
-        >
-          <Image
-            src={Logo}
-            alt="FITLOG"
-            className="h-6 w-auto"
-          />
+    <nav className="border-b border-[#1f2228] bg-[#0b0d10]">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-6">
+        <Link href="/" className="flex items-center gap-2">
+          <Image src={Logo} alt="FitLog logo" width={24} height={24} />
 
-          <span className="text-[13px] font-extrabold tracking-[-0.02em] text-white">
+          <span className="text-[20px] font-black tracking-wide text-white">
             FITLOG
           </span>
         </Link>
 
-        <nav className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1">
+        <div className="flex items-center gap-6">
           <Link
             href="/"
-            className={[
-              "rounded-full px-4 py-[6px] text-[10px] font-medium transition",
+            className={`rounded-full px-5 py-2 text-[12px] font-bold transition ${
               workoutsActive
-                ? "bg-[#1a2312] text-[#c2f800]"
-                : "text-[#9a9ca2] hover:text-white",
-            ].join(" ")}
+                ? "bg-[#17220c] text-[#c8ff00]"
+                : "text-[#a5a8ae] hover:text-white"
+            }`}
           >
             Workouts
           </Link>
 
           <Link
             href="/my-plan"
-            className={[
-              "rounded-full px-4 py-[6px] text-[10px] font-medium transition",
-              planActive
-                ? "bg-[#1a2312] text-[#c2f800]"
-                : "text-[#9a9ca2] hover:text-white",
-            ].join(" ")}
+            className={`text-[12px] font-medium transition ${
+              planActive ? "text-white" : "text-[#a5a8ae] hover:text-white"
+            }`}
           >
             My Plan
           </Link>
-        </nav>
-
-        <div className="flex items-center gap-5">
+        </div>
+        <div className="flex items-center gap-7">
           <Link
             href="/my-plan"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-[12px] text-[#d1d3d7] transition hover:text-white"
           >
-            <span className="text-[10px] text-[#d1d2d4]">
-              Plan
-            </span>
+            <span>Plan</span>
 
-            <span className="flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#c2f800] px-1 text-[9px] font-bold text-black">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#c8ff00] text-[10px] font-black text-black">
               {plan.length}
             </span>
           </Link>
 
           <Link
             href="/my-plan?tab=saved"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-[12px] text-[#a5a8ae] transition hover:text-white"
           >
-            <span className="text-[10px] text-[#d1d2d4]">
-              Saved
-            </span>
+            <span>Saved</span>
 
-            <span className="flex h-[17px] min-w-[17px] items-center justify-center rounded-full border border-[#35373d] px-1 text-[9px] font-medium text-[#aaa]">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[#454950] text-[10px] text-[#d1d3d7]">
               {saved.length}
             </span>
           </Link>
         </div>
       </div>
-    </header>
+    </nav>
   );
 }

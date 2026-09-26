@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import { PlanProvider } from "./components/PlanContext";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,11 +30,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="bg-[#0b0d10]">
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+    >
+      <body className="min-h-screen bg-[#0d0f12]">
         <PlanProvider>
-          <Navbar />
-          {children}
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+
+            <main className="flex-1">
+              {children}
+            </main>
+
+            <Footer />
+
+            <ToastContainer
+              position="top-left"
+              autoClose={2500}
+            />
+          </div>
         </PlanProvider>
       </body>
     </html>

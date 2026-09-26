@@ -14,109 +14,104 @@ type PlanContextType = {
   plan: Workout[];
   saved: Workout[];
 
-  addToPlan: (workout: Workout) => boolean;
+  addToPlan: (workout: Workout) => void;
   removeFromPlan: (id: number) => void;
 
-  saveForLater: (workout: Workout) => boolean;
+  saveForLater: (workout: Workout) => void;
   removeSaved: (id: number) => void;
-
-  isInPlan: (id: number) => boolean;
-  isSaved: (id: number) => boolean;
 };
 
-const PlanContext = createContext<PlanContextType | undefined>(undefined);
+const PlanContext = createContext<PlanContextType | undefined>(
+  undefined
+);
 
-export function PlanProvider({ children }: { children: ReactNode }) {
+export function PlanProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [plan, setPlan] = useState<Workout[]>([]);
   const [saved, setSaved] = useState<Workout[]>([]);
-  const [hydrated, setHydrated] = useState(false);
 
+  // Load data from localStorage
   useEffect(() => {
-    try {
-      const storedPlan = localStorage.getItem("fitlog-plan");
-      const storedSaved = localStorage.getItem("fitlog-saved");
+    const savedPlan = localStorage.getItem("fitlog-plan");
+    const savedWorkouts =
+      localStorage.getItem("fitlog-saved");
 
-      if (storedPlan) {
-        setPlan(JSON.parse(storedPlan));
-      }
+    if (savedPlan) {
+      setPlan(JSON.parse(savedPlan));
+    }
 
-      if (storedSaved) {
-        setSaved(JSON.parse(storedSaved));
-      }
-    } catch {
-      localStorage.removeItem("fitlog-plan");
-      localStorage.removeItem("fitlog-saved");
-    } finally {
-      setHydrated(true);
+    if (savedWorkouts) {
+      setSaved(JSON.parse(savedWorkouts));
     }
   }, []);
 
+  // Save plan
   useEffect(() => {
-    if (!hydrated) return;
+    localStorage.setItem(
+      "fitlog-plan",
+      JSON.stringify(plan)
+    );
+  }, [plan]);
 
-    localStorage.setItem("fitlog-plan", JSON.stringify(plan));
-  }, [plan, hydrated]);
-
+  // Save saved workouts
   useEffect(() => {
-    if (!hydrated) return;
-
-    localStorage.setItem("fitlog-saved", JSON.stringify(saved));
-  }, [saved, hydrated]);
+    localStorage.setItem(
+      "fitlog-saved",
+      JSON.stringify(saved)
+    );
+  }, [saved]);
 
   function addToPlan(workout: Workout) {
-    let added = false;
+    if (plan.length >= 5) {
+      return;
+    }
 
-    setPlan((current) => {
-      if (current.some((item) => item.id === workout.id)) {
-        return current;
-      }
+    const alreadyExists = plan.some(
+      (item) => item.id === workout.id
+    );
 
-      if (current.length >= 5) {
-        return current;
-      }
+    if (alreadyExists) {
+      return;
+    }
 
-      added = true;
-
-      return [...current, workout];
-    });
-
-    return added;
+    setPlan((currentPlan) => [
+      ...currentPlan,
+      workout,
+    ]);
   }
 
   function removeFromPlan(id: number) {
-    setPlan((current) =>
-      current.filter((workout) => workout.id !== id)
+    setPlan((currentPlan) =>
+      currentPlan.filter(
+        (workout) => workout.id !== id
+      )
     );
   }
 
   function saveForLater(workout: Workout) {
-    let savedSuccessfully = false;
+    const alreadyExists = saved.some(
+      (item) => item.id === workout.id
+    );
 
-    setSaved((current) => {
-      if (current.some((item) => item.id === workout.id)) {
-        return current;
-      }
+    if (alreadyExists) {
+      return;
+    }
 
-      savedSuccessfully = true;
-
-      return [...current, workout];
-    });
-
-    return savedSuccessfully;
+    setSaved((currentSaved) => [
+      ...currentSaved,
+      workout,
+    ]);
   }
 
   function removeSaved(id: number) {
-    setSaved((current) =>
-      current.filter((workout) => workout.id !== id)
+    setSaved((currentSaved) =>
+      currentSaved.filter(
+        (workout) => workout.id !== id
+      )
     );
-  }
-
-  function isInPlan(id: number) {
-    return plan.some((workout) => workout.id === id);
-  }
-
-  function isSaved(id: number) {
-    return saved.some((workout) => workout.id === id);
   }
 
   return (
@@ -128,8 +123,6 @@ export function PlanProvider({ children }: { children: ReactNode }) {
         removeFromPlan,
         saveForLater,
         removeSaved,
-        isInPlan,
-        isSaved,
       }}
     >
       {children}
@@ -141,7 +134,9 @@ export function usePlan() {
   const context = useContext(PlanContext);
 
   if (!context) {
-    throw new Error("usePlan must be used inside PlanProvider");
+    throw new Error(
+      "usePlan must be used inside PlanProvider"
+    );
   }
 
   return context;

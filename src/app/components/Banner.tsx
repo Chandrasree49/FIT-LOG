@@ -4,11 +4,8 @@ import bannerImage from "../assets/banner.png";
 export default function Banner() {
   return (
     <section className="relative overflow-hidden rounded-xl border border-[#292c32] bg-[#15171c]">
-      {/* Blue dotted top border */}
-      <div className="absolute left-0 top-0 z-20 w-full border-t-2 border-dotted border-[#00a8ff]" />
-
       <div className="relative flex min-h-[275px] items-center px-7 py-8 sm:px-10 lg:px-12">
-        {/* Content */}
+
         <div className="relative z-10 max-w-[500px]">
           <p className="mb-4 text-[10px] font-black uppercase tracking-[0.08em] text-[#c8ff00]">
             WORKOUT LIBRARY
@@ -30,8 +27,6 @@ export default function Banner() {
             Browse Workouts
           </button>
         </div>
-
-        {/* Character image */}
         <div className="absolute bottom-0 right-2 h-[240px] w-[250px] sm:right-6 sm:h-[260px] sm:w-[280px] lg:right-8 lg:w-[300px]">
           <Image
             src={bannerImage}
