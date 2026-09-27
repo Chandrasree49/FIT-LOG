@@ -14,7 +14,13 @@ type Tab = "plan" | "saved";
 type SortOption = "duration" | "calories" | "rating";
 
 export default function MyPlanPage() {
-  const { plan, saved, removeFromPlan, removeSaved } = usePlan();
+  const {
+    plan,
+    saved,
+    loading,
+    removeFromPlan,
+    removeSaved,
+  } = usePlan();
 
   const [activeTab, setActiveTab] = useState<Tab>("plan");
   const [sortBy, setSortBy] = useState<SortOption>("duration");
@@ -80,7 +86,9 @@ export default function MyPlanPage() {
       removeSaved(workout.id);
     }
 
-    setDone((current) => current.filter((id) => id !== workout.id));
+    setDone((current) =>
+      current.filter((id) => id !== workout.id)
+    );
 
     toast.info(
       activeTab === "plan"
@@ -93,6 +101,7 @@ export default function MyPlanPage() {
     <>
       <main className="min-h-screen bg-[#0b0d10] px-3 py-8 sm:px-5">
         <div className="mx-auto max-w-[900px]">
+          {/* HEADER */}
           <header className="mb-6">
             <div className="mt-1 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
               <div>
@@ -101,20 +110,31 @@ export default function MyPlanPage() {
                 </h1>
 
                 <p className="mt-2 max-w-[500px] text-[10px] leading-[1.6] text-[#858990]">
-                  Cap of five lifts of today.Finish then,and load more.
+                  Cap of five lifts for today. Finish them, then load more.
                 </p>
               </div>
             </div>
           </header>
 
+          {/* METRICS */}
           <section className="grid grid-cols-3 gap-2">
-            <Metric label="EXERCISES" value={String(plan.length)} />
+            <Metric
+              label="EXERCISES"
+              value={String(plan.length)}
+            />
 
-            <Metric label="MINUTES" value={String(totalMinutes)} />
+            <Metric
+              label="MINUTES"
+              value={String(totalMinutes)}
+            />
 
-            <Metric label="CALORIES" value={String(totalCalories)} />
+            <Metric
+              label="CALORIES"
+              value={String(totalCalories)}
+            />
           </section>
 
+          {/* TABS + SORT */}
           <section className="mt-5">
             <div className="flex flex-col gap-3 border-b border-[#272b31] pb-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex gap-1">
@@ -145,6 +165,7 @@ export default function MyPlanPage() {
                 </button>
               </div>
 
+              {/* SORT */}
               <div className="flex items-center gap-2">
                 <span className="text-[8px] font-bold uppercase text-[#777b83]">
                   Sort By
@@ -154,15 +175,23 @@ export default function MyPlanPage() {
                   <select
                     value={sortBy}
                     onChange={(event) =>
-                      setSortBy(event.target.value as SortOption)
+                      setSortBy(
+                        event.target.value as SortOption
+                      )
                     }
                     className="appearance-none rounded-md border border-[#30343c] bg-[#15181e] py-2 pl-3 pr-7 text-[9px] font-bold text-white outline-none transition focus:border-[#c8ff00]"
                   >
-                    <option value="duration">Duration</option>
+                    <option value="duration">
+                      Duration
+                    </option>
 
-                    <option value="calories">Calories</option>
+                    <option value="calories">
+                      Calories
+                    </option>
 
-                    <option value="rating">Rating</option>
+                    <option value="rating">
+                      Rating
+                    </option>
                   </select>
 
                   <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-[#8b9099]">
@@ -172,7 +201,10 @@ export default function MyPlanPage() {
               </div>
             </div>
 
-            {sortedWorkouts.length === 0 ? (
+            {/* LOADING / EMPTY / WORKOUTS */}
+            {loading ? (
+              <LoadingState />
+            ) : sortedWorkouts.length === 0 ? (
               <EmptyState activeTab={activeTab} />
             ) : (
               <div className="mt-3 space-y-2">
@@ -206,17 +238,43 @@ export default function MyPlanPage() {
 }
 
 /* ---------------------------------- */
+/* LOADING STATE */
+/* ---------------------------------- */
+
+function LoadingState() {
+  return (
+    <div className="mt-3 flex min-h-[120px] items-center justify-center rounded-xl border border-[#292d34] bg-[#15181e]">
+      <div className="flex items-center gap-2">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-[#c8ff00]" />
+
+        <p className="text-[9px] font-bold uppercase tracking-[0.08em] text-[#777b83]">
+          Loading workouts…
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------------------------- */
 /* METRIC */
 /* ---------------------------------- */
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
   return (
     <div className="rounded-lg border border-[#292d34] bg-[#15181e] px-3 py-4">
       <p className="text-[7px] font-bold uppercase tracking-[0.08em] text-[#777b83]">
         {label}
       </p>
 
-      <p className="mt-1 text-xl font-black leading-none text-white">{value}</p>
+      <p className="mt-1 text-xl font-black leading-none text-white">
+        {value}
+      </p>
     </div>
   );
 }
@@ -242,7 +300,9 @@ function PlanWorkoutCard({
     <article
       className={[
         "overflow-hidden rounded-xl border bg-[#15181e] transition",
-        isDone ? "border-[#536b16]" : "border-[#292d34]",
+        isDone
+          ? "border-[#536b16]"
+          : "border-[#292d34]",
       ].join(" ")}
     >
       <div className="flex min-h-[105px] items-stretch">
@@ -254,7 +314,10 @@ function PlanWorkoutCard({
             fill
             unoptimized
             sizes="155px"
-            className={["object-cover", isDone ? "opacity-50" : ""].join(" ")}
+            className={[
+              "object-cover",
+              isDone ? "opacity-50" : "",
+            ].join(" ")}
           />
         </div>
 
@@ -264,7 +327,9 @@ function PlanWorkoutCard({
             <h2
               className={[
                 "truncate text-[11px] font-black uppercase text-white sm:text-[12px]",
-                isDone ? "line-through opacity-60" : "",
+                isDone
+                  ? "line-through opacity-60"
+                  : "",
               ].join(" ")}
             >
               {workout.name}
@@ -336,6 +401,10 @@ function PlanWorkoutCard({
   );
 }
 
+/* ---------------------------------- */
+/* CLOCK ICON */
+/* ---------------------------------- */
+
 function ClockIcon() {
   return (
     <svg
@@ -345,7 +414,14 @@ function ClockIcon() {
       fill="none"
       aria-hidden="true"
     >
-      <circle cx="12" cy="12" r="8.5" stroke="#c8ff00" strokeWidth="2" />
+      <circle
+        cx="12"
+        cy="12"
+        r="8.5"
+        stroke="#c8ff00"
+        strokeWidth="2"
+      />
+
       <path
         d="M12 7.5V12L15 14"
         stroke="#c8ff00"
@@ -356,6 +432,10 @@ function ClockIcon() {
     </svg>
   );
 }
+
+/* ---------------------------------- */
+/* FLAME ICON */
+/* ---------------------------------- */
 
 function FlameIcon() {
   return (
@@ -374,6 +454,10 @@ function FlameIcon() {
   );
 }
 
+/* ---------------------------------- */
+/* STAR ICON */
+/* ---------------------------------- */
+
 function StarIcon() {
   return (
     <svg
@@ -390,6 +474,10 @@ function StarIcon() {
     </svg>
   );
 }
+
+/* ---------------------------------- */
+/* CHECK ICON */
+/* ---------------------------------- */
 
 function CheckIcon() {
   return (
@@ -411,6 +499,10 @@ function CheckIcon() {
   );
 }
 
+/* ---------------------------------- */
+/* CLOSE ICON */
+/* ---------------------------------- */
+
 function CloseIcon() {
   return (
     <svg
@@ -429,6 +521,10 @@ function CloseIcon() {
     </svg>
   );
 }
+
+/* ---------------------------------- */
+/* EMPTY STATE */
+/* ---------------------------------- */
 
 function EmptyState({ activeTab }: { activeTab: Tab }) {
   if (activeTab === "saved") {

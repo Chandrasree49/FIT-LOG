@@ -7,87 +7,74 @@ import {
   useState,
   type ReactNode,
 } from "react";
-
 import type { Workout } from "./Library";
 
 type PlanContextType = {
   plan: Workout[];
   saved: Workout[];
-
+  loading: boolean;
   addToPlan: (workout: Workout) => void;
   removeFromPlan: (id: number) => void;
-
   saveForLater: (workout: Workout) => void;
   removeSaved: (id: number) => void;
 };
 
-const PlanContext = createContext<PlanContextType | undefined>(
-  undefined
-);
+const PlanContext = createContext<PlanContextType | undefined>(undefined);
 
-export function PlanProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function PlanProvider({ children }: { children: ReactNode }) {
   const [plan, setPlan] = useState<Workout[]>([]);
   const [saved, setSaved] = useState<Workout[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Load data from localStorage
+  // Load saved plan data from localStorage
   useEffect(() => {
-    const savedPlan = localStorage.getItem("fitlog-plan");
-    const savedWorkouts =
-      localStorage.getItem("fitlog-saved");
+    try {
+      const savedPlan = localStorage.getItem("fitlog-plan");
+      const savedWorkouts = localStorage.getItem("fitlog-saved");
 
-    if (savedPlan) {
-      setPlan(JSON.parse(savedPlan));
-    }
+      if (savedPlan) {
+        setPlan(JSON.parse(savedPlan));
+      }
 
-    if (savedWorkouts) {
-      setSaved(JSON.parse(savedWorkouts));
+      if (savedWorkouts) {
+        setSaved(JSON.parse(savedWorkouts));
+      }
+    } catch (error) {
+      console.error("Could not load FitLog data:", error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  // Save plan
+  // Save plan to localStorage
   useEffect(() => {
-    localStorage.setItem(
-      "fitlog-plan",
-      JSON.stringify(plan)
-    );
-  }, [plan]);
+    if (loading) return;
 
-  // Save saved workouts
+    localStorage.setItem("fitlog-plan", JSON.stringify(plan));
+  }, [plan, loading]);
+
+  // Save saved workouts to localStorage
   useEffect(() => {
-    localStorage.setItem(
-      "fitlog-saved",
-      JSON.stringify(saved)
-    );
-  }, [saved]);
+    if (loading) return;
+
+    localStorage.setItem("fitlog-saved", JSON.stringify(saved));
+  }, [saved, loading]);
 
   function addToPlan(workout: Workout) {
-    if (plan.length >= 5) {
-      return;
-    }
+    if (plan.length >= 5) return;
 
     const alreadyExists = plan.some(
       (item) => item.id === workout.id
     );
 
-    if (alreadyExists) {
-      return;
-    }
+    if (alreadyExists) return;
 
-    setPlan((currentPlan) => [
-      ...currentPlan,
-      workout,
-    ]);
+    setPlan((currentPlan) => [...currentPlan, workout]);
   }
 
   function removeFromPlan(id: number) {
     setPlan((currentPlan) =>
-      currentPlan.filter(
-        (workout) => workout.id !== id
-      )
+      currentPlan.filter((workout) => workout.id !== id)
     );
   }
 
@@ -96,21 +83,14 @@ export function PlanProvider({
       (item) => item.id === workout.id
     );
 
-    if (alreadyExists) {
-      return;
-    }
+    if (alreadyExists) return;
 
-    setSaved((currentSaved) => [
-      ...currentSaved,
-      workout,
-    ]);
+    setSaved((currentSaved) => [...currentSaved, workout]);
   }
 
   function removeSaved(id: number) {
     setSaved((currentSaved) =>
-      currentSaved.filter(
-        (workout) => workout.id !== id
-      )
+      currentSaved.filter((workout) => workout.id !== id)
     );
   }
 
@@ -119,6 +99,7 @@ export function PlanProvider({
       value={{
         plan,
         saved,
+        loading,
         addToPlan,
         removeFromPlan,
         saveForLater,
