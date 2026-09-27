@@ -274,123 +274,108 @@ function Metric({
   );
 }
 
-
 function PlanWorkoutCard({
-  workout,
-  activeTab,
-  isDone,
-  onDone,
-  onRemove,
-}: {
-  workout: Workout;
-  activeTab: Tab;
-  isDone: boolean;
-  onDone: () => void;
-  onRemove: () => void;
-}) {
-  return (
-    <article
-      className={[
-        "overflow-hidden rounded-xl border bg-[#15181e] transition",
-        isDone
-          ? "border-[#536b16]"
-          : "border-[#292d34]",
-      ].join(" ")}
-    >
-      <div className="flex min-h-[105px] items-stretch">
-    
-        <div className="relative w-[105px] shrink-0 bg-[#20242a] sm:w-[155px]">
-          <Image
-            src={workout.image}
-            alt={workout.name}
-            fill
-            unoptimized
-            sizes="155px"
-            className={[
-              "object-cover",
-              isDone ? "opacity-50" : "",
-            ].join(" ")}
-          />
-        </div>
-
-      
-        <div className="min-w-0 flex-1 px-3 py-3 sm:px-4">
-          <div className="min-w-0">
-            <h2
-              className={[
-                "truncate text-[11px] font-black uppercase text-white sm:text-[12px]",
-                isDone
-                  ? "line-through opacity-60"
-                  : "",
-              ].join(" ")}
+    workout,
+    activeTab,
+    isDone,
+    onDone,
+    onRemove,
+  }: {
+    workout: Workout;
+    activeTab: Tab;
+    isDone: boolean;
+    onDone: () => void;
+    onRemove: () => void;
+  }) {
+    return (
+      <article
+        className="overflow-hidden rounded-xl border border-[#292d34] bg-[#15181e] transition"
+      >
+        <div className="flex min-h-[105px] items-stretch">
+          {/* IMAGE */}
+          <div className="relative w-[105px] shrink-0 bg-[#20242a] sm:w-[155px]">
+            <Image
+              src={workout.image}
+              alt={workout.name}
+              fill
+              unoptimized
+              sizes="155px"
+              className="object-cover"
+            />
+          </div>
+  
+          {/* MIDDLE CONTENT */}
+          <div className="min-w-0 flex-1 px-3 py-3 sm:px-4">
+            <div className="min-w-0">
+              <h2 className="truncate text-[11px] font-black uppercase text-white sm:text-[12px]">
+                {workout.name}
+              </h2>
+  
+              <p className="mt-1 truncate text-[8px] text-[#777b83]">
+                {workout.equipment}
+              </p>
+            </div>
+  
+            {/* STATS */}
+            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[7px] text-[#9da1a9]">
+              <span className="flex items-center gap-1">
+                <ClockIcon />
+                {workout.duration} min
+              </span>
+  
+              <span className="flex items-center gap-1">
+                <FlameIcon />
+                {workout.caloriesBurned} kcal
+              </span>
+  
+              <span className="flex items-center gap-1">
+                <StarIcon />
+                {workout.rating.toFixed(1)}
+              </span>
+            </div>
+          </div>
+  
+          {/* ACTIONS */}
+          <div className="flex shrink-0 items-center gap-2 px-3 sm:px-4">
+            <Link
+              href={`/Workouts/${workout.id}`}
+              className="flex h-[34px] items-center justify-center rounded-full border border-[#41464f] px-4 text-[8px] font-medium text-white transition hover:border-[#69707a] hover:bg-[#20242a]"
             >
-              {workout.name}
-            </h2>
-
-            <p className="mt-1 truncate text-[8px] text-[#777b83]">
-              {workout.equipment}
-            </p>
-          </div>
-
-         
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[7px] text-[#9da1a9]">
-            <span className="flex items-center gap-1">
-              <ClockIcon />
-              {workout.duration} min
-            </span>
-
-            <span className="flex items-center gap-1">
-              <FlameIcon />
-              {workout.caloriesBurned} kcal
-            </span>
-
-            <span className="flex items-center gap-1">
-              <StarIcon />
-              {workout.rating.toFixed(1)}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex shrink-0 items-center gap-2 px-3 sm:px-4">
-          <Link
-            href={`/Workouts/${workout.id}`}
-            className="flex h-[34px] items-center justify-center rounded-full border border-[#41464f] px-4 text-[8px] font-medium text-white transition hover:border-[#69707a] hover:bg-[#20242a]"
-          >
-            View Details
-          </Link>
-
-          {activeTab === "plan" && (
+              View Details
+            </Link>
+  
+            {activeTab === "plan" && (
+              <button
+                type="button"
+                onClick={onDone}
+                disabled={isDone}
+                className={[
+                  "flex h-[34px] items-center justify-center gap-1.5 rounded-full px-4 text-[8px] font-black transition",
+                  isDone
+                    ? "cursor-default bg-[#536b16] text-[#c8ff00]"
+                    : "bg-[#c8ff00] text-black hover:bg-[#d8ff45]",
+                ].join(" ")}
+              >
+                <CheckIcon />
+  
+                {isDone ? "Done" : "Mark as Done"}
+              </button>
+            )}
+  
+            {/* REMOVE */}
             <button
               type="button"
-              onClick={onDone}
-              disabled={isDone}
-              className={[
-                "flex h-[34px] items-center justify-center gap-1.5 rounded-full px-4 text-[8px] font-black text-black transition",
-                isDone
-                  ? "cursor-default bg-[#536b16] text-[#c8ff00]"
-                  : "bg-[#c8ff00] hover:bg-[#d8ff45]",
-              ].join(" ")}
+              onClick={onRemove}
+              aria-label={`Remove ${workout.name}`}
+              className="ml-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[#777b83] transition hover:bg-[#252930] hover:text-white"
             >
-              <CheckIcon />
-
-              {isDone ? "Done" : "Mark as Done"}
+              <CloseIcon />
             </button>
-          )}
-
-          <button
-            type="button"
-            onClick={onRemove}
-            aria-label={`Remove ${workout.name}`}
-            className="ml-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[#777b83] transition hover:bg-[#252930] hover:text-white"
-          >
-            <CloseIcon />
-          </button>
+          </div>
         </div>
-      </div>
-    </article>
-  );
-}
-
+      </article>
+    );
+  }
 
 
 function ClockIcon() {

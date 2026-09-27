@@ -27,7 +27,7 @@ export default function HomeContent() {
         const data: Workout[] = await response.json();
 
         const elapsed = Date.now() - startTime;
-        const remaining = Math.max(700 - elapsed, 0);
+        const remaining = Math.max(300 - elapsed, 0);
 
         await new Promise((resolve) =>
           setTimeout(resolve, remaining)
