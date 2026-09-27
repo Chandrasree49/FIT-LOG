@@ -14,23 +14,15 @@ type Tab = "plan" | "saved";
 type SortOption = "duration" | "calories" | "rating";
 
 export default function MyPlanPage() {
-  const {
-    plan,
-    saved,
-    removeFromPlan,
-    removeSaved,
-  } = usePlan();
+  const { plan, saved, removeFromPlan, removeSaved } = usePlan();
 
   const [activeTab, setActiveTab] = useState<Tab>("plan");
-  const [sortBy, setSortBy] =
-    useState<SortOption>("duration");
+  const [sortBy, setSortBy] = useState<SortOption>("duration");
 
   const [done, setDone] = useState<number[]>([]);
 
   useEffect(() => {
-    const query = new URLSearchParams(
-      window.location.search
-    );
+    const query = new URLSearchParams(window.location.search);
 
     const tab = query.get("tab");
 
@@ -39,8 +31,7 @@ export default function MyPlanPage() {
     }
   }, []);
 
-  const currentWorkouts =
-    activeTab === "plan" ? plan : saved;
+  const currentWorkouts = activeTab === "plan" ? plan : saved;
 
   const sortedWorkouts = useMemo(() => {
     const copy = [...currentWorkouts];
@@ -66,8 +57,7 @@ export default function MyPlanPage() {
   );
 
   const totalCalories = plan.reduce(
-    (total, workout) =>
-      total + workout.caloriesBurned,
+    (total, workout) => total + workout.caloriesBurned,
     0
   );
 
@@ -90,9 +80,7 @@ export default function MyPlanPage() {
       removeSaved(workout.id);
     }
 
-    setDone((current) =>
-      current.filter((id) => id !== workout.id)
-    );
+    setDone((current) => current.filter((id) => id !== workout.id));
 
     toast.info(
       activeTab === "plan"
@@ -106,10 +94,6 @@ export default function MyPlanPage() {
       <main className="min-h-screen bg-[#0b0d10] px-3 py-8 sm:px-5">
         <div className="mx-auto max-w-[900px]">
           <header className="mb-6">
-            <p className="text-[9px] font-black uppercase tracking-[0.12em] text-[#c8ff00]">
-              YOUR WORKOUTS
-            </p>
-
             <div className="mt-1 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
               <div>
                 <h1 className="text-3xl font-black uppercase leading-none tracking-[-0.03em] text-white sm:text-4xl">
@@ -117,29 +101,18 @@ export default function MyPlanPage() {
                 </h1>
 
                 <p className="mt-2 max-w-[500px] text-[10px] leading-[1.6] text-[#858990]">
-                  Build today&apos;s workout plan, keep
-                  useful lifts saved, and track what you&apos;ve
-                  completed.
+                  Cap of five lifts of today.Finish then,and load more.
                 </p>
               </div>
             </div>
           </header>
 
           <section className="grid grid-cols-3 gap-2">
-            <Metric
-              label="EXERCISES"
-              value={String(plan.length)}
-            />
+            <Metric label="EXERCISES" value={String(plan.length)} />
 
-            <Metric
-              label="MINUTES"
-              value={String(totalMinutes)}
-            />
+            <Metric label="MINUTES" value={String(totalMinutes)} />
 
-            <Metric
-              label="CALORIES"
-              value={String(totalCalories)}
-            />
+            <Metric label="CALORIES" value={String(totalCalories)} />
           </section>
 
           <section className="mt-5">
@@ -181,23 +154,15 @@ export default function MyPlanPage() {
                   <select
                     value={sortBy}
                     onChange={(event) =>
-                      setSortBy(
-                        event.target.value as SortOption
-                      )
+                      setSortBy(event.target.value as SortOption)
                     }
                     className="appearance-none rounded-md border border-[#30343c] bg-[#15181e] py-2 pl-3 pr-7 text-[9px] font-bold text-white outline-none transition focus:border-[#c8ff00]"
                   >
-                    <option value="duration">
-                      Duration
-                    </option>
+                    <option value="duration">Duration</option>
 
-                    <option value="calories">
-                      Calories
-                    </option>
+                    <option value="calories">Calories</option>
 
-                    <option value="rating">
-                      Rating
-                    </option>
+                    <option value="rating">Rating</option>
                   </select>
 
                   <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-[#8b9099]">
@@ -218,9 +183,7 @@ export default function MyPlanPage() {
                     activeTab={activeTab}
                     isDone={done.includes(workout.id)}
                     onDone={() => handleDone(workout)}
-                    onRemove={() =>
-                      handleRemove(workout)
-                    }
+                    onRemove={() => handleRemove(workout)}
                   />
                 ))}
               </div>
@@ -242,25 +205,25 @@ export default function MyPlanPage() {
   );
 }
 
-function Metric({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+/* ---------------------------------- */
+/* METRIC */
+/* ---------------------------------- */
+
+function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-[#292d34] bg-[#15181e] px-3 py-4">
       <p className="text-[7px] font-bold uppercase tracking-[0.08em] text-[#777b83]">
         {label}
       </p>
 
-      <p className="mt-1 text-xl font-black leading-none text-white">
-        {value}
-      </p>
+      <p className="mt-1 text-xl font-black leading-none text-white">{value}</p>
     </div>
   );
 }
+
+/* ---------------------------------- */
+/* WORKOUT CARD */
+/* ---------------------------------- */
 
 function PlanWorkoutCard({
   workout,
@@ -279,131 +242,195 @@ function PlanWorkoutCard({
     <article
       className={[
         "overflow-hidden rounded-xl border bg-[#15181e] transition",
-        isDone
-          ? "border-[#536b16]"
-          : "border-[#292d34]",
+        isDone ? "border-[#536b16]" : "border-[#292d34]",
       ].join(" ")}
     >
-      <div className="flex min-h-[105px]">
-        <div className="relative w-[105px] shrink-0 bg-[#20242a] sm:w-[125px]">
+      <div className="flex min-h-[105px] items-stretch">
+        {/* IMAGE */}
+        <div className="relative w-[105px] shrink-0 bg-[#20242a] sm:w-[155px]">
           <Image
             src={workout.image}
             alt={workout.name}
             fill
             unoptimized
-            sizes="125px"
-            className={[
-              "object-cover",
-              isDone ? "opacity-50" : "",
-            ].join(" ")}
+            sizes="155px"
+            className={["object-cover", isDone ? "opacity-50" : ""].join(" ")}
           />
         </div>
 
-        <div className="min-w-0 flex-1 p-3">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <div className="flex flex-wrap gap-1">
-                {workout.muscleGroups
-                  .slice(0, 3)
-                  .map((muscle) => (
-                    <span
-                      key={muscle}
-                      className="rounded-[3px] bg-[#c8ff00] px-1.5 py-[2px] text-[6px] font-black uppercase leading-none text-black"
-                    >
-                      {muscle}
-                    </span>
-                  ))}
-              </div>
-
-              <h2
-                className={[
-                  "mt-1.5 truncate text-[10px] font-black uppercase text-white",
-                  isDone
-                    ? "line-through opacity-60"
-                    : "",
-                ].join(" ")}
-              >
-                {workout.name}
-              </h2>
-
-              <p className="mt-1 truncate text-[7px] text-[#777b83]">
-                {workout.equipment}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={onRemove}
-              aria-label={`Remove ${workout.name}`}
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[#777b83] transition hover:bg-[#252930] hover:text-white"
+        {/* MIDDLE CONTENT */}
+        <div className="min-w-0 flex-1 px-3 py-3 sm:px-4">
+          <div className="min-w-0">
+            <h2
+              className={[
+                "truncate text-[11px] font-black uppercase text-white sm:text-[12px]",
+                isDone ? "line-through opacity-60" : "",
+              ].join(" ")}
             >
-              ×
-            </button>
+              {workout.name}
+            </h2>
+
+            <p className="mt-1 truncate text-[8px] text-[#777b83]">
+              {workout.equipment}
+            </p>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[7px] text-[#8b9099]">
-            <span>
+          {/* STATS WITH ICONS */}
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[7px] text-[#9da1a9]">
+            <span className="flex items-center gap-1">
+              <ClockIcon />
               {workout.duration} min
             </span>
 
-            <span>
+            <span className="flex items-center gap-1">
+              <FlameIcon />
               {workout.caloriesBurned} kcal
             </span>
 
-            <span>
-              {workout.sets} sets
-            </span>
-
-            <span>
-              {workout.reps} reps
-            </span>
-
-            <span>
-              ★ {workout.rating.toFixed(1)}
+            <span className="flex items-center gap-1">
+              <StarIcon />
+              {workout.rating.toFixed(1)}
             </span>
           </div>
+        </div>
 
-          <div className="mt-3 flex gap-2">
-            <Link
-              href={`/Workouts/${workout.id}`}
-              className="flex h-[27px] items-center justify-center rounded-md border border-[#30343c] px-3 text-[7px] font-black uppercase text-white transition hover:bg-[#20242a]"
+        {/* ACTIONS - SAME ROW AS IMAGE */}
+        <div className="flex shrink-0 items-center gap-2 px-3 sm:px-4">
+          <Link
+            href={`/Workouts/${workout.id}`}
+            className="flex h-[34px] items-center justify-center rounded-full border border-[#41464f] px-4 text-[8px] font-medium text-white transition hover:border-[#69707a] hover:bg-[#20242a]"
+          >
+            View Details
+          </Link>
+
+          {activeTab === "plan" && (
+            <button
+              type="button"
+              onClick={onDone}
+              disabled={isDone}
+              className={[
+                "flex h-[34px] items-center justify-center gap-1.5 rounded-full px-4 text-[8px] font-black text-black transition",
+                isDone
+                  ? "cursor-default bg-[#536b16] text-[#c8ff00]"
+                  : "bg-[#c8ff00] hover:bg-[#d8ff45]",
+              ].join(" ")}
             >
-              View Details
-            </Link>
+              <CheckIcon />
 
-            {activeTab === "plan" && (
-              <button
-                type="button"
-                onClick={onDone}
-                disabled={isDone}
-                className={[
-                  "flex h-[27px] items-center justify-center gap-1 rounded-md px-3 text-[7px] font-black uppercase transition",
-                  isDone
-                    ? "cursor-default bg-[#283414] text-[#c8ff00]"
-                    : "bg-[#c8ff00] text-black hover:bg-[#d8ff45]",
-                ].join(" ")}
-              >
-                <span className="text-[10px]">
-                  {isDone ? "✓" : "✓"}
-                </span>
+              {isDone ? "Done" : "Mark as Done"}
+            </button>
+          )}
 
-                {isDone
-                  ? "Done"
-                  : "Mark as Done"}
-              </button>
-            )}
-          </div>
+          {/* REMOVE */}
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label={`Remove ${workout.name}`}
+            className="ml-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[#777b83] transition hover:bg-[#252930] hover:text-white"
+          >
+            <CloseIcon />
+          </button>
         </div>
       </div>
     </article>
   );
 }
 
-function EmptyState({
-  activeTab,
-}: {
-  activeTab: Tab;
-}) {
+function ClockIcon() {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="8.5" stroke="#c8ff00" strokeWidth="2" />
+      <path
+        d="M12 7.5V12L15 14"
+        stroke="#c8ff00"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function FlameIcon() {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M13.5 2.5C14 6 11 7.5 11 10.5C11 12 12 13 13.5 13C15.5 13 16.5 11.5 16 9.5C19 12 20 14.5 20 17C20 20.3 16.9 22 12 22C7.1 22 4 19.2 4 15C4 11.8 5.8 8.9 9 6.5C8.8 9 10 10 11 10.5C10.5 6.5 12 4.2 13.5 2.5Z"
+        fill="#c8ff00"
+      />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 3.5L14.6 8.8L20.5 9.7L16.2 13.9L17.2 19.8L12 17L6.8 19.8L7.8 13.9L3.5 9.7L9.4 8.8L12 3.5Z"
+        fill="#c8ff00"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5 12.5L10 17L19 7"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M6 6L18 18M18 6L6 18"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function EmptyState({ activeTab }: { activeTab: Tab }) {
   if (activeTab === "saved") {
     return (
       <div className="mt-3 rounded-xl border border-dashed border-[#30343c] bg-[#111419] px-6 py-12 text-center">
@@ -416,15 +443,14 @@ function EmptyState({
         </h2>
 
         <p className="mx-auto mt-2 max-w-[300px] text-[8px] leading-[1.6] text-[#777b83]">
-          Save exercises from the workout library and
-          they&apos;ll appear here.
+          Browse the library and add a lift to get today moving.
         </p>
 
         <Link
           href="/"
           className="mt-4 inline-flex rounded-md bg-[#c8ff00] px-4 py-2.5 text-[8px] font-black uppercase text-black transition hover:bg-[#d8ff45]"
         >
-          Browse Workouts
+          Go To Workouts
         </Link>
       </div>
     );
@@ -437,19 +463,18 @@ function EmptyState({
       </div>
 
       <h2 className="mt-4 text-[11px] font-black uppercase text-white">
-        Your plan is empty
+        Nothing Here Yet
       </h2>
 
       <p className="mx-auto mt-2 max-w-[300px] text-[8px] leading-[1.6] text-[#777b83]">
-        Pick workouts from the library and add them to
-        today&apos;s plan.
+        Browse the library and add a lift to get today moving.
       </p>
 
       <Link
         href="/"
         className="mt-4 inline-flex rounded-md bg-[#c8ff00] px-4 py-2.5 text-[8px] font-black uppercase text-black transition hover:bg-[#d8ff45]"
       >
-        Browse Workouts
+        Go To Workouts
       </Link>
     </div>
   );

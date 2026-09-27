@@ -22,7 +22,7 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-[#0b0d10] px-2 py-4 sm:px-4">
-      <div className="mx-auto w-full max-w-[900px]">
+      <div className="mx-auto w-full max-w-[1100px]">
         <Banner />
 
         <div className="mt-4">

@@ -36,10 +36,8 @@ export default function RootLayout({
             draggable
             theme="dark"
           />
-          
         </PlanProvider>
-        <Footer/>
-
+        <Footer />
       </body>
     </html>
   );
