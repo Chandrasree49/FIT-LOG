@@ -46,7 +46,6 @@ export default function WorkoutActions({
 
   return (
     <div className="mt-7 flex items-center gap-3">
-      {/* ADD TO PLAN */}
       <button
         type="button"
         onClick={handleAddToPlan}
@@ -55,8 +54,6 @@ export default function WorkoutActions({
         <CalendarIcon />
         <span>Add to today's plan</span>
       </button>
-
-      {/* SAVE FOR LATER */}
       <button
         type="button"
         onClick={handleSave}
@@ -68,11 +65,6 @@ export default function WorkoutActions({
     </div>
   );
 }
-
-/* =========================================================
-   CALENDAR ICON
-========================================================= */
-
 function CalendarIcon() {
   return (
     <svg
@@ -109,11 +101,6 @@ function CalendarIcon() {
     </svg>
   );
 }
-
-/* =========================================================
-   BOOKMARK ICON
-========================================================= */
-
 function BookmarkIcon() {
   return (
     <svg

@@ -11,8 +11,7 @@ export default function WorkoutPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get workout ID from:
-    // /Workouts/3
+   
     const parts = window.location.pathname
       .split("/")
       .filter(Boolean);
@@ -24,8 +23,6 @@ export default function WorkoutPage() {
       return;
     }
 
-    // The Library page stores the selected workout here
-    // before navigating to the detail page.
     const savedWorkout = sessionStorage.getItem(
       `fitlog-workout-${id}`
     );
@@ -45,10 +42,6 @@ export default function WorkoutPage() {
     setLoading(false);
   }, []);
 
-  /* =========================================================
-     LOADING
-  ========================================================= */
-
   if (loading) {
     return (
       <main className="min-h-screen bg-[#0b0d10] px-4 py-8 sm:px-6">
@@ -66,11 +59,6 @@ export default function WorkoutPage() {
       </main>
     );
   }
-
-  /* =========================================================
-     NOT FOUND
-  ========================================================= */
-
   if (!workout) {
     return (
       <main className="min-h-screen bg-[#0b0d10] px-4 py-8 sm:px-6">
@@ -89,19 +77,12 @@ export default function WorkoutPage() {
     );
   }
 
-  /* =========================================================
-     DETAIL PAGE
-  ========================================================= */
-
   return (
     <main className="min-h-screen bg-[#0b0d10] px-4 py-8 sm:px-6">
       <div className="mx-auto w-full max-w-[1100px]">
 
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-[38px]">
 
-          {/* =================================================
-              LEFT SIDE — IMAGE
-          ================================================= */}
 
           <div className="relative h-[496px] overflow-hidden rounded-[10px] bg-[#15181e]">
             <Image
@@ -115,25 +96,22 @@ export default function WorkoutPage() {
             />
           </div>
 
-          {/* =================================================
-              RIGHT SIDE
-          ================================================= */}
+         
 
           <div className="min-w-0">
 
-            {/* TITLE */}
+            
 
             <h1 className="text-[27px] font-black uppercase leading-none tracking-[-0.04em] text-white">
               {workout.name}
             </h1>
 
-            {/* DESCRIPTION */}
+         
 
             <p className="mt-[9px] max-w-[500px] text-[10px] leading-[1.55] text-[#858990]">
               {workout.description}
             </p>
 
-            {/* CATEGORY TAGS */}
 
             <div className="mt-[11px] flex flex-wrap gap-[7px]">
               {workout.muscleGroups.map((muscle) => (
@@ -146,9 +124,7 @@ export default function WorkoutPage() {
               ))}
             </div>
 
-            {/* =================================================
-                KEY SPECS
-            ================================================= */}
+          
 
             <section className="mt-[18px]">
               <div className="overflow-hidden rounded-[12px] border border-[#292d34] bg-[#15181e]">
@@ -192,9 +168,6 @@ export default function WorkoutPage() {
               </div>
             </section>
 
-            {/* =================================================
-                INSTRUCTIONS
-            ================================================= */}
 
             <section className="mt-[22px]">
               <h2 className="text-[10px] font-black uppercase tracking-[0.03em] text-white">
@@ -219,17 +192,6 @@ export default function WorkoutPage() {
               </ol>
             </section>
 
-            {/* =================================================
-                BUTTONS
-                DO NOT REBUILD THEM HERE.
-                WorkoutActions handles:
-                - Add to plan
-                - Save for later
-                - duplicate checking
-                - 5 item limit
-                - toast messages
-            ================================================= */}
-
             <WorkoutActions workout={workout} />
 
           </div>
@@ -239,9 +201,6 @@ export default function WorkoutPage() {
   );
 }
 
-/* =========================================================
-   KEY SPECS ROW
-========================================================= */
 
 function SpecRow({
   label,

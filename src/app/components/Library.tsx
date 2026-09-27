@@ -63,7 +63,7 @@ function WorkoutCard({
   workout: Workout;
 }) {
   function handleClick() {
-    // Save the clicked workout in the browser.
+
     sessionStorage.setItem(
       `fitlog-workout-${workout.id}`,
       JSON.stringify(workout)

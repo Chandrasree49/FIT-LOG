@@ -101,7 +101,7 @@ export default function MyPlanPage() {
     <>
       <main className="min-h-screen bg-[#0b0d10] px-3 py-8 sm:px-5">
         <div className="mx-auto max-w-[900px]">
-          {/* HEADER */}
+         
           <header className="mb-6">
             <div className="mt-1 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
               <div>
@@ -116,7 +116,6 @@ export default function MyPlanPage() {
             </div>
           </header>
 
-          {/* METRICS */}
           <section className="grid grid-cols-3 gap-2">
             <Metric
               label="EXERCISES"
@@ -134,7 +133,7 @@ export default function MyPlanPage() {
             />
           </section>
 
-          {/* TABS + SORT */}
+    
           <section className="mt-5">
             <div className="flex flex-col gap-3 border-b border-[#272b31] pb-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex gap-1">
@@ -165,7 +164,7 @@ export default function MyPlanPage() {
                 </button>
               </div>
 
-              {/* SORT */}
+        
               <div className="flex items-center gap-2">
                 <span className="text-[8px] font-bold uppercase text-[#777b83]">
                   Sort By
@@ -201,7 +200,7 @@ export default function MyPlanPage() {
               </div>
             </div>
 
-            {/* LOADING / EMPTY / WORKOUTS */}
+           
             {loading ? (
               <LoadingState />
             ) : sortedWorkouts.length === 0 ? (
@@ -237,9 +236,7 @@ export default function MyPlanPage() {
   );
 }
 
-/* ---------------------------------- */
-/* LOADING STATE */
-/* ---------------------------------- */
+
 
 function LoadingState() {
   return (
@@ -255,9 +252,7 @@ function LoadingState() {
   );
 }
 
-/* ---------------------------------- */
-/* METRIC */
-/* ---------------------------------- */
+
 
 function Metric({
   label,
@@ -279,9 +274,6 @@ function Metric({
   );
 }
 
-/* ---------------------------------- */
-/* WORKOUT CARD */
-/* ---------------------------------- */
 
 function PlanWorkoutCard({
   workout,
@@ -306,7 +298,7 @@ function PlanWorkoutCard({
       ].join(" ")}
     >
       <div className="flex min-h-[105px] items-stretch">
-        {/* IMAGE */}
+    
         <div className="relative w-[105px] shrink-0 bg-[#20242a] sm:w-[155px]">
           <Image
             src={workout.image}
@@ -321,7 +313,7 @@ function PlanWorkoutCard({
           />
         </div>
 
-        {/* MIDDLE CONTENT */}
+      
         <div className="min-w-0 flex-1 px-3 py-3 sm:px-4">
           <div className="min-w-0">
             <h2
@@ -340,7 +332,7 @@ function PlanWorkoutCard({
             </p>
           </div>
 
-          {/* STATS WITH ICONS */}
+         
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[7px] text-[#9da1a9]">
             <span className="flex items-center gap-1">
               <ClockIcon />
@@ -359,7 +351,6 @@ function PlanWorkoutCard({
           </div>
         </div>
 
-        {/* ACTIONS - SAME ROW AS IMAGE */}
         <div className="flex shrink-0 items-center gap-2 px-3 sm:px-4">
           <Link
             href={`/Workouts/${workout.id}`}
@@ -386,7 +377,6 @@ function PlanWorkoutCard({
             </button>
           )}
 
-          {/* REMOVE */}
           <button
             type="button"
             onClick={onRemove}
@@ -401,9 +391,7 @@ function PlanWorkoutCard({
   );
 }
 
-/* ---------------------------------- */
-/* CLOCK ICON */
-/* ---------------------------------- */
+
 
 function ClockIcon() {
   return (
@@ -433,9 +421,7 @@ function ClockIcon() {
   );
 }
 
-/* ---------------------------------- */
-/* FLAME ICON */
-/* ---------------------------------- */
+
 
 function FlameIcon() {
   return (
@@ -454,9 +440,7 @@ function FlameIcon() {
   );
 }
 
-/* ---------------------------------- */
-/* STAR ICON */
-/* ---------------------------------- */
+
 
 function StarIcon() {
   return (
@@ -475,9 +459,6 @@ function StarIcon() {
   );
 }
 
-/* ---------------------------------- */
-/* CHECK ICON */
-/* ---------------------------------- */
 
 function CheckIcon() {
   return (
@@ -499,9 +480,6 @@ function CheckIcon() {
   );
 }
 
-/* ---------------------------------- */
-/* CLOSE ICON */
-/* ---------------------------------- */
 
 function CloseIcon() {
   return (
@@ -521,10 +499,6 @@ function CloseIcon() {
     </svg>
   );
 }
-
-/* ---------------------------------- */
-/* EMPTY STATE */
-/* ---------------------------------- */
 
 function EmptyState({ activeTab }: { activeTab: Tab }) {
   if (activeTab === "saved") {

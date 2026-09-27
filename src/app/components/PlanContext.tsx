@@ -26,7 +26,6 @@ export function PlanProvider({ children }: { children: ReactNode }) {
   const [saved, setSaved] = useState<Workout[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Load saved plan data from localStorage
   useEffect(() => {
     try {
       const savedPlan = localStorage.getItem("fitlog-plan");
@@ -46,14 +45,14 @@ export function PlanProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save plan to localStorage
+
   useEffect(() => {
     if (loading) return;
 
     localStorage.setItem("fitlog-plan", JSON.stringify(plan));
   }, [plan, loading]);
 
-  // Save saved workouts to localStorage
+
   useEffect(() => {
     if (loading) return;
 
